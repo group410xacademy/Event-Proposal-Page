@@ -1,23 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
-
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/js/bootstrap'
+import Form from './components/Form';
+import './App.css'
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+<div>logo</div>
+<div className="d-flex flex-row justify-content-between px-5">
+
+  <div>
+    text will be diaplyed here
+  </div>
+  <div className='bg-white px-4'>
+   <Form/>
+  </div>
+</div>
     </div>
   );
 }
