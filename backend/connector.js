@@ -10,4 +10,4 @@ vendorDB=mongoose.model('vendor',vendorSchema)
 
 
 exports.userDB=userDB
-exportS.vendorDB=vendorDB
+exports.vendorDB=vendorDB
