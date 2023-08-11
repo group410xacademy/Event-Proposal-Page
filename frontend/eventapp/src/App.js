@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
 import Form from './components/Form';
 import './App.css'
+import CreatePropsal from './components/CreateProposal';
 function App() {
   return (
     <div className='App'>
@@ -12,7 +13,8 @@ function App() {
     text will be diaplyed here
   </div>
   <div className='bg-white'>
-   <Form/>
+   {/* <Form/> */}
+   <CreatePropsal/>
   </div>
 </div>
     </div>

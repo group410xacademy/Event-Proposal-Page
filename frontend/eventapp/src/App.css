@@ -6,4 +6,13 @@
   margin-top: 15px;
   margin-bottom: 17px;
 }
-
+.width-image{
+  width: 100%;
+ 
+  color:white;
+}
+.width-image-20{
+  background-color: rgb(207, 197, 197);
+  width: 20%;
+  padding-bottom:15%
+}
