@@ -11,7 +11,7 @@ function App() {
   <div>
     text will be diaplyed here
   </div>
-  <div className='bg-white px-4'>
+  <div className='bg-white'>
    <Form/>
   </div>
 </div>

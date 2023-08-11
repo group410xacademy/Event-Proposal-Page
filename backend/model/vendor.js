@@ -1,8 +1,8 @@
 const {Schema}= require('mongoose');
 const vendorSchema =new Schema({
-    Name:Schema.Types.String,
-    Email:Schema.Types.String,
-    Contact:Schema.Types.String,
-    Password:Schema.Types.String
+    name:Schema.Types.String,
+    email:Schema.Types.String,
+    phone:Schema.Types.String,
+    password:Schema.Types.String
 })
 exports.vendorSchema =vendorSchema;

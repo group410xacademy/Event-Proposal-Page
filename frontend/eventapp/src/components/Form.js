@@ -2,7 +2,7 @@ import {TextField} from '@mui/material';
 import {FormControl,FormHelperText,InputLabel,OutlinedInput,FormLabel,Button} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormControl } from '@mui/material/FormControl';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import "yup-phone-lite";
@@ -13,6 +13,7 @@ export default function Form(){
     let [method,setMethod]=useState('register')
     let [loadinga,setLoadinga]=useState(false)
     let [loadingb,setLoadingb]=useState(false)
+    console.log('refreshes')
     const validation = (method=="register")?(Yup.object().shape({
    email: Yup.string().required().email().test(
         'email-backend-validation',  // Name
@@ -22,7 +23,7 @@ export default function Form(){
           // username good, false otherwise
           const { data: { status } } = await axios.post(
             "http://localhost:5000/person/validate", 
-            { email:email}
+            { email:email,show:show}
           );
   
           return status
@@ -37,7 +38,7 @@ export default function Form(){
           // username good, false otherwise
           const { data: { status } } = await axios.post(
             "http://localhost:5000/person/validate", 
-            { phone:phone}
+            { phone:phone,show:show}
           );
   
           return status
@@ -48,7 +49,23 @@ export default function Form(){
         .matches(/\d/, "at least one number")
         .matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, "at least one special character"),
       confirm_password: Yup.string().label('confirm password').required('confirm your password').oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    })):null
+    })):(Yup.object().shape({
+      loginid: Yup.string().required().email().test(
+           'emaillogin-backend-validation',  // Name
+           'email doesnt exist',               // Msg
+           async (loginid) => {
+             // Res from backend will be flag at res.data.success, true for 
+             // username good, false otherwise
+             const { data: { status } } = await axios.post(
+               "http://localhost:5000/person/validate", 
+               { email:loginid,show:show}
+             );
+     
+             return !status
+           }
+         ),
+         loginpassword: Yup.string().required()
+       }))
   
    
     const formik = useFormik({
@@ -62,11 +79,13 @@ export default function Form(){
           loginpassword:''
         },
         validationSchema:validation,
-        onSubmit: (values) => {
+        onSubmit: (values,{resetForm}) => {
+          if(show=='user'){
           if(method=='register'){
           setLoadingb(true)
           axios.post('http://localhost:5000/person/registeruser',values).then(()=>{
             setTimeout(()=>setLoadingb(false),5000)
+            resetForm({values:''})
           console.log('submitted')})
           }
           else if(method=='login'){
@@ -76,18 +95,34 @@ export default function Form(){
               setTimeout(()=>setLoadinga(false),2000)
             console.log('loggedin')})
           }
-          
+        }
+        else if(show=='vendor'){
+          if(method=='register'){
+          setLoadingb(true)
+          axios.post('http://localhost:5000/person/registervendor',values).then(()=>{
+            setTimeout(()=>setLoadingb(false),5000)
+            resetForm({values:''})
+          console.log('submitted')})
+          }
+          else if(method=='login'){
+            console.log('clicked')
+            setLoadinga(true)
+            axios.post('http://localhost:5000/person/loginvendor',values).then(()=>{
+              setTimeout(()=>setLoadinga(false),2000)
+            console.log('loggedin')})
+          }
+        }
         },
       }); 
     return<>
     <div className='d-flex justify-content-between w-100'>
-      <Button className='w-50' variant='text' onClick={()=>setShow('vendor')}>Vendor</Button>
-      <Button className='w-50' variant='text' onClick={()=>setShow('user')}>User</Button>
+      <Button className='w-50 rounded-0' variant={(show=='vendor')?'contained':'text'} onClick={()=>setShow('vendor')}>Vendor</Button>
+      <Button className='w-50 rounded-0' variant={(show=='user')?'contained':'text'} onClick={()=>setShow('user')}>User</Button>
     </div>
     <div>
-    <h6>{method==='login'?'signin your account':'register your account'}</h6>
+    <h6 className='signintext'>{method==='login'?'signin your account':'register your account'}</h6>
     </div>
-    <form  onSubmit={formik.handleSubmit}>
+    <form  onSubmit={formik.handleSubmit} className='mx-3'>
         <div className='d-flex flex-column'>
          {(method=='register')&&<><FormControl color="primary" >
         <InputLabel htmlFor="name" required>Name</InputLabel>
@@ -117,13 +152,13 @@ export default function Form(){
 </>}
 {method=='login'&&<><FormControl color="primary">
         <InputLabel htmlFor="loginid" required>Phone no or email</InputLabel>
-  <OutlinedInput id="loginid" label="phone no or email" name='loginid' type="email" aria-describedby="my-helper-text"/>
-  <FormHelperText  id="my-helper-text">We'll never share your email.</FormHelperText>
+  <OutlinedInput id="loginid" label="phone no or email" name='loginid' type="email" aria-describedby="my-helper-text" {...formik.getFieldProps('loginid')}/>
+  {(formik.touched.loginid&&formik.errors.loginid)?<FormHelperText sx={{color:'red'}}id="my-helper-text">{formik.errors.loginid}</FormHelperText>:<div className='gap'></div>}
 </FormControl>
 <FormControl color="primary">
         <InputLabel htmlFor="loginpassword" required>password</InputLabel>
-  <OutlinedInput id="loginpassword" label="password" type="password" name='loginpassword' aria-describedby="my-helper-text"/>
-  <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
+  <OutlinedInput id="loginpassword" label="password" type="password" name='loginpassword' aria-describedby="my-helper-text"{...formik.getFieldProps('loginpassword')}/>
+  {(formik.touched.loginpassword&&formik.errors.loginpassword)?<FormHelperText sx={{color:'red'}}id="my-helper-text">{formik.errors.loginpassword}</FormHelperText>:<div className='gap'></div>}
 </FormControl></>} 
 
 <div className='d-flex justify-content-between pb-4'>
