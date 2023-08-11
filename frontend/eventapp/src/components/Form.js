@@ -1,36 +1,82 @@
 import {TextField} from '@mui/material';
 import {FormControl,FormHelperText,InputLabel,OutlinedInput,FormLabel,Button} from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormControl } from '@mui/material/FormControl';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import "yup-phone-lite";
-const validation = Yup.object().shape({
-    email: Yup.string().required().email(),
-    name: Yup.string().required(),
-    phone: Yup.string().required().phone('IN','not a valid number'),
-    password: Yup.string().required() .min(8, "Pasword must be 8 or more")
-      .matches(/(?=.*[a-z])(?=.*[A-Z])\w+/, "at least one uppercase and lowercase")
-      .matches(/\d/, "at least one number")
-      .matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, "at least one special character"),
-    confirm_password: Yup.string().label('confirm password').required('confirm your password').oneOf([Yup.ref('password'), null], 'Passwords must match'),
-  })
+import axios from "axios"
 
- 
 export default function Form(){
     let [show,setShow]=useState('vendor')
     let [method,setMethod]=useState('register')
+    let [loadinga,setLoadinga]=useState(false)
+    let [loadingb,setLoadingb]=useState(false)
+    const validation = (method=="register")?(Yup.object().shape({
+   email: Yup.string().required().email().test(
+        'email-backend-validation',  // Name
+        'email already exists',               // Msg
+        async (email) => {
+          // Res from backend will be flag at res.data.success, true for 
+          // username good, false otherwise
+          const { data: { status } } = await axios.post(
+            "http://localhost:5000/person/validate", 
+            { email:email}
+          );
+  
+          return status
+        }
+      ),
+      name: Yup.string().required(),
+      phone: Yup.string().required().phone('IN','not a valid number').test(
+        'phone-backend-validation',  // Name
+        'number already taken',               // Msg
+        async (phone) => {
+          // Res from backend will be flag at res.data.success, true for 
+          // username good, false otherwise
+          const { data: { status } } = await axios.post(
+            "http://localhost:5000/person/validate", 
+            { phone:phone}
+          );
+  
+          return status
+        }
+      ),
+      password: Yup.string().required() .min(8, "Pasword must be 8 or more")
+        .matches(/(?=.*[a-z])(?=.*[A-Z])\w+/, "at least one uppercase and lowercase")
+        .matches(/\d/, "at least one number")
+        .matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, "at least one special character"),
+      confirm_password: Yup.string().label('confirm password').required('confirm your password').oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    })):null
+  
+   
     const formik = useFormik({
         initialValues: {
           name: '',
           email: '',
           phone:'',
           password:'',
-          confirm_password:''
+          confirm_password:'',
+          loginid:'',
+          loginpassword:''
         },
         validationSchema:validation,
-        onSubmit: values => {
-          alert(JSON.stringify(values, null, 2));
+        onSubmit: (values) => {
+          if(method=='register'){
+          setLoadingb(true)
+          axios.post('http://localhost:5000/person/registeruser',values).then(()=>{
+            setTimeout(()=>setLoadingb(false),5000)
+          console.log('submitted')})
+          }
+          else if(method=='login'){
+            console.log('clicked')
+            setLoadinga(true)
+            axios.post('http://localhost:5000/person/loginuser',values).then(()=>{
+              setTimeout(()=>setLoadinga(false),2000)
+            console.log('loggedin')})
+          }
+          
         },
       }); 
     return<>
@@ -70,21 +116,22 @@ export default function Form(){
 </FormControl>
 </>}
 {method=='login'&&<><FormControl color="primary">
-        <InputLabel htmlFor="my-input" required>Phone no or email</InputLabel>
-  <OutlinedInput id="my-input" label="phone no or email" type="number" aria-describedby="my-helper-text"/>
+        <InputLabel htmlFor="loginid" required>Phone no or email</InputLabel>
+  <OutlinedInput id="loginid" label="phone no or email" name='loginid' type="email" aria-describedby="my-helper-text"/>
   <FormHelperText  id="my-helper-text">We'll never share your email.</FormHelperText>
 </FormControl>
 <FormControl color="primary">
-        <InputLabel htmlFor="my-input" required>password</InputLabel>
-  <OutlinedInput id="my-input" label="password" type="password" aria-describedby="my-helper-text"/>
+        <InputLabel htmlFor="loginpassword" required>password</InputLabel>
+  <OutlinedInput id="loginpassword" label="password" type="password" name='loginpassword' aria-describedby="my-helper-text"/>
   <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
 </FormControl></>} 
 
 <div className='d-flex justify-content-between pb-4'>
-<Button variant ={method=='login'?'contained':'text'} type='submit' className='mt-3'color='primary' sx={{order:()=>{if(method=='login'){return 2}
-else return 1}}} onClick={()=>setMethod('login')}>signin</Button>
-<Button variant ={method=='register'?'contained':'text'}  className='mt-3' color='primary' sx={{order:()=>{if(method=='register'){return 2}
-else return 1}}} onClick={()=>setMethod('register')} type='submit'>Register</Button>  
+<LoadingButton loading={loadinga} variant ={method=='login'?'contained':'text'} type='submit' className='mt-3'color='primary' sx={{order:()=>{if(method=='login'){return 2}
+else return 1}}} onClick={()=>{setMethod('login')}}>signin</LoadingButton>
+<LoadingButton loading={loadingb} variant ={method=='register'?'contained':'text'}  className='mt-3' color='primary' sx={{order:()=>{if(method=='register'){return 2}
+else return 1}}} onClick={()=>{setMethod('register')
+}} type='submit'>Register</LoadingButton>  
 </div>
 </div>
 
