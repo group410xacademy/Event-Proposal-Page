@@ -4,13 +4,16 @@ import { useFormControl } from '@mui/material/FormControl';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-
+import "yup-phone-lite";
 const validation = Yup.object().shape({
     email: Yup.string().required().email(),
     name: Yup.string().required(),
-    phone: Yup.string().required(),
-    password: Yup.string().required(),
-    confirm_password: Yup.string().label('confirm password').required().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    phone: Yup.string().required().phone('IN','not a valid number'),
+    password: Yup.string().required() .min(8, "Pasword must be 8 or more")
+      .matches(/(?=.*[a-z])(?=.*[A-Z])\w+/, "at least one uppercase and lowercase")
+      .matches(/\d/, "at least one number")
+      .matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, "at least one special character"),
+    confirm_password: Yup.string().label('confirm password').required('confirm your password').oneOf([Yup.ref('password'), null], 'Passwords must match'),
   })
 
  
@@ -52,7 +55,7 @@ export default function Form(){
 </FormControl>
 <FormControl color="primary">
         <InputLabel htmlFor="phone" required>Phone no</InputLabel>
-  <OutlinedInput id="phone" label="phone no" type="number" name="phone" aria-describedby="my-helper-text"{...formik.getFieldProps('phone')}/>
+  <OutlinedInput id="phone" label="phone no" type="tel" name="phone" aria-describedby="my-helper-text"{...formik.getFieldProps('phone')}/>
   {(formik.touched.password&&formik.errors.phone)?<FormHelperText sx={{color:'red'}} id="my-helper-text">{formik.errors.phone}</FormHelperText>:<div className='gap'></div>}
 </FormControl>  
 <FormControl color="primary">
