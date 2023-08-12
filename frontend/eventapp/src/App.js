@@ -7,16 +7,16 @@ function App() {
   return (
     <div className='App'>
 <div>logo</div>
-<div className="d-flex flex-row justify-content-between px-5">
+{/* <div className="d-flex flex-row justify-content-between px-5">
 
   <div>
     text will be diaplyed here
   </div>
   <div className='bg-white'>
-   {/* <Form/> */}
-   <CreatePropsal/>
+   <Form/>
   </div>
-</div>
+</div> */}
+ <CreatePropsal/>
     </div>
   );
 }
