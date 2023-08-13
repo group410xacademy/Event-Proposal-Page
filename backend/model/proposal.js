@@ -1,5 +1,6 @@
 const {Schema}= require('mongoose');
 const proposalSchema =new Schema({
+    UUID:Schema.Types.String,
     eventName:Schema.Types.String,
     eventPlace:Schema.Types.String,
     proposalType:Schema.Types.String,
@@ -8,7 +9,6 @@ const proposalSchema =new Schema({
     from:Schema.Types.Date,
     to:Schema.Types.Date,
     description:Schema.Types.String,
-    images:[Schema.Types.String],
     foodPreferences:Schema.Types.String,
     events:Schema.Types.String  
 })

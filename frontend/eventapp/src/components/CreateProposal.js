@@ -43,17 +43,38 @@ export default function CreatePropsal(){
   const maxNumber = 10;
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-    console.log(imageList, addUpdateIndex);
+    console.log(imageList);
     setImages(imageList);}
   const formik = useFormik({
     initialValues: {
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setUploading(true)
-   axios.post('http://localhost:5000/proposal/createproposal',{...values,images:images}).then((data)=>{
-    console.log(data)
-   setUploading(false)})
-   .catch(err=>console.log(err))
+      
+      const formData=new FormData()
+      for(let i=0;i<images.length;i++){
+        console.log(images[i].file)
+        formData.append("eventimages",images[i].file)
+      }
+      try{
+const datauploading =await axios.post('http://localhost:5000/proposal/createproposal',values)
+}
+catch(err){
+  console.log(err,'error while uploading images')
+}
+try{
+const imagesuploading = await axios.post('http://localhost:5000/proposal/uploadimages',formData,{   
+  headers: { "Content-Type": "multipart/form-data" }})
+}
+catch(err){
+  console.log(err)
+}
+setUploading(false)
+  //  axios.post('http://localhost:5000/proposal/createproposal',formData,{   
+  //   headers: { "Content-Type": "multipart/form-data" }}).then((data)=>{
+  //   console.log(data)
+  //  setUploading(false)})
+  //  .catch(err=>console.log(err))
    
     },
   });
