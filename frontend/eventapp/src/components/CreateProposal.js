@@ -36,7 +36,7 @@ const places = [
       label: 'HYD',
     },
   ];
-export default function CreatePropsal(){
+export default function CreateProposal({onClose,id}){
   const [focused,setFocused] = useState(false)
   const [images, setImages] = useState([]);
   const [uploading,setUploading]=useState(false)
@@ -70,6 +70,7 @@ catch(err){
   console.log(err)
 }
 setUploading(false)
+onClose()
   //  axios.post('http://localhost:5000/proposal/createproposal',formData,{   
   //   headers: { "Content-Type": "multipart/form-data" }}).then((data)=>{
   //   console.log(data)
@@ -78,20 +79,22 @@ setUploading(false)
    
     },
   });
-    return <form  onSubmit={formik.handleSubmit}>
+  
+   return <div  className='mx-auto' id={id}><form  onSubmit={formik.handleSubmit}>
 <h1 className='text-center'>create propoasal</h1>
 <div className='d-flex flex-row justify-content-around'>
 
     <div className='w-50'>
-        <FormControl className='mx-2'>
+        <FormControl  className='mx-2'>
         <InputLabel htmlFor='name'>Event Name</InputLabel>
-        <OutlinedInput  onChange={formik.handleChange}
+        <OutlinedInput size='small'  onChange={formik.handleChange}
           onBlur={formik.handleBlur} fullWidth type='text' id="name" name="eventName"/>
         </FormControl>
         <div className='d-flex flex-row justify-content-between w-100 my-2'>
         <FormControl  className='w-50 mx-2'>
         <InputLabel id='outlined-select-currency' focused={focused} >Place of Event</InputLabel>
-        <Select   
+        <Select  
+         size='small' 
          onChange={formik.handleChange}
          onBlur={formik.handleBlur}
           name='eventPlace'   
@@ -115,10 +118,11 @@ setUploading(false)
         </Select>
         </FormControl>
         <FormControl  className='w-50 mx-2'>
-        <InputLabel id="simple-select-label" htmlFor='outlined-select-currency' focused={focused}>Proposal Type</InputLabel>
+        <InputLabel  id="simple-select-label" htmlFor='outlined-select-currency' focused={focused}>Proposal Type</InputLabel>
        
       
         <Select
+        size='small'
          onChange={formik.handleChange}
          onBlur={formik.handleBlur}
         name="proposalType"      
@@ -147,6 +151,7 @@ setUploading(false)
         <FormControl  className='w-50 mx-2'>
         <InputLabel id="simple-select-label" htmlFor='outlined-select-currency' focused={focused}>Event Type</InputLabel>
         <Select
+        size='small'
          onChange={formik.handleChange}
          onBlur={formik.handleBlur}
         name='eventType'      
@@ -171,14 +176,14 @@ setUploading(false)
         </Select>
         </FormControl>
        
-        <TextField   onChange={formik.handleChange}
+        <TextField size='small'   onChange={formik.handleChange}
           onBlur={formik.handleBlur} type='number' className='w-50 mx-2 align-self-end' id="standard-basic" name="budget" label="Budget" variant="standard" />
         </div>
 <div className='d-flex flex-row w-100 my-2'>
     <div className='w-50 mx-2'>
 <LocalizationProvider  dateAdapter={AdapterDayjs}>
   <InputLabel htmlFor="datepick1">From</InputLabel>
-        <DatePicker onChange={(e)=>formik.setFieldValue('from',e)}
+        <DatePicker  slotProps={{ textField: { size: 'small' } }}  onChange={(e)=>formik.setFieldValue('from',e)}
          onBlur={formik.handleBlur}
           id="datepick1"/>
  </LocalizationProvider>
@@ -186,7 +191,7 @@ setUploading(false)
  <div className="w-50 mx-2" >
  <InputLabel htmlFor="datepick2">To</InputLabel>
  <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker name="to" type="date" onChange={(e)=>formik.setFieldValue('to',e)}
+        <DatePicker name="to" type="date"   slotProps={{ textField: { size: 'small' } }} onChange={(e)=>formik.setFieldValue('to',e)}
           onBlur={formik.handleBlur} id="datepick2" />
  </LocalizationProvider>
  </div>
@@ -195,7 +200,7 @@ setUploading(false)
 <FormControl className='mx-2'>
         <InputLabel htmlFor='name'>Description</InputLabel>
         <OutlinedInput  onChange={formik.handleChange}
-          onBlur={formik.handleBlur} multiline rows={5} placeholder='Description' name='description' fullWidth type='text' id="description"/>
+          onBlur={formik.handleBlur} multiline rows={2} placeholder='Description' name='description' fullWidth type='text' id="description"/>
         </FormControl>
     </div>
     <div className='d-flex flex-column w-50 px-2'>
@@ -236,7 +241,7 @@ setUploading(false)
         //     loading="lazy"
         //   />
         // </ImageListItem>
- <div className='width-image-20 mx-2 d-flex flex-column align-items-center giveborder'>
+ <div className='width-image-20 mx-1 d-flex flex-column align-items-center giveborder'>
   <img  className="imagelist"src={image.data_url}/>
   <div className='d-flex flex-row justify-content-center'>
   <IconButton aria-label="updateicon" onClick={() => onImageUpdate(index)} color="primary" sx={{width:"30px",height:"20px"}}>
@@ -272,19 +277,20 @@ setUploading(false)
 <FormControl>
         <InputLabel htmlFor='name'>Food Preferences</InputLabel>
         <OutlinedInput onChange={formik.handleChange}
-          onBlur={formik.handleBlur} multiline rows={5} fullWidth type='text' id="foodPreferences" name="foodPreferences"/>
+          onBlur={formik.handleBlur} multiline rows={2} fullWidth type='text' id="foodPreferences" name="foodPreferences"/>
         </FormControl>
         <FormControl>
         <InputLabel htmlFor='name'>Events</InputLabel>
         <OutlinedInput onChange={formik.handleChange}
-          onBlur={formik.handleBlur} multiline rows={5} fullWidth type='text' id="events" name="events"/>
+          onBlur={formik.handleBlur} multiline rows={2} fullWidth type='text' id="events" name="events"/>
         </FormControl>
     </div>
 
 </div>
 <div className='d-flex justify-content-center'>
-<LoadingButton variant="contained" loading={uploading} color='primary' size='large' type='submit'>ADD</LoadingButton>
+<LoadingButton variant="contained" loading={uploading}  color='primary' size='large' type='submit'>ADD</LoadingButton>
 </div>
     </form>
+    </div>
 
 }
