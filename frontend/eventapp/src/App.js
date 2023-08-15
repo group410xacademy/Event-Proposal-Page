@@ -6,6 +6,9 @@ import './App.css'
 
 import VendorProfile from './pages/VendorProfile';
 import Home from './pages/Home';
+import UserHome from './pages/UserHome';
+import User from './pages/User';
+import Event from './pages/Event';
 function App() {
   return (
     <div className='App'>
@@ -24,6 +27,10 @@ function App() {
  <Routes>
   <Route path="/" element={<Home/>}/>
   <Route path='/vendor' element={<VendorProfile/>}/>
+  <Route path='/user' element={<User/>}>
+  <Route path='home' element={<UserHome/>} />
+<Route path='event' element={<Event/>} />
+  </Route>
  </Routes>
  </BrowserRouter>
     </div>

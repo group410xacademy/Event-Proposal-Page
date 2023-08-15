@@ -1,5 +1,7 @@
 import { FormControl } from '@mui/base';
 import { Button, FormControlLabel, FormLabel, InputLabel, OutlinedInput, Select,IconButton} from '@mui/material';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
@@ -7,8 +9,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useState } from 'react';
-import { useFormik } from 'formik';
+import { useContext, useState } from 'react';
+import { Formik, useFormik } from 'formik';
 import ImageUploading from "react-images-uploading";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -17,6 +19,7 @@ import Fingerprint from '@mui/icons-material/Fingerprint';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { red } from '@mui/material/colors';
 import axios from 'axios';
+import { proposalContext } from '../pages/VendorProfile';
 const places = [
 
     {
@@ -36,18 +39,19 @@ const places = [
       label: 'HYD',
     },
   ];
-export default function CreateProposal({onClose,id}){
+export default function CreateProposal({onClose,id,handlerefresh:setRefresh,formikdata,setFormikdata}){
   const [focused,setFocused] = useState(false)
   const [images, setImages] = useState([]);
   const [uploading,setUploading]=useState(false)
   const maxNumber = 10;
+ 
+
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
     console.log(imageList);
     setImages(imageList);}
   const formik = useFormik({
-    initialValues: {
-    },
+    initialValues: formikdata,
     onSubmit: async (values) => {
       setUploading(true)
       
@@ -57,20 +61,29 @@ export default function CreateProposal({onClose,id}){
         formData.append("eventimages",images[i].file)
       }
       try{
-const datauploading =await axios.post('http://localhost:5000/proposal/createproposal',values)
+const datauploading =await axios.post('http://localhost:5000/proposal/createproposal',values,{headers:{
+  Authorization:localStorage.getItem("ACCESS_TOKEN")
+}})
+if(datauploading.status!=200){
+setFormikdata(values)
+return
+}
 }
 catch(err){
   console.log(err,'error while uploading images')
 }
 try{
 const imagesuploading = await axios.post('http://localhost:5000/proposal/uploadimages',formData,{   
-  headers: { "Content-Type": "multipart/form-data" }})
+  headers: { "Content-Type": "multipart/form-data","Authorization":localStorage.getItem("ACCESS_TOKEN") }})
 }
 catch(err){
   console.log(err)
 }
 setUploading(false)
+setRefresh(prev=>!prev)
+console.log('reached here')
 onClose()
+
   //  axios.post('http://localhost:5000/proposal/createproposal',formData,{   
   //   headers: { "Content-Type": "multipart/form-data" }}).then((data)=>{
   //   console.log(data)
@@ -79,6 +92,8 @@ onClose()
    
     },
   });
+  const eventsource = useContext(proposalContext)
+  console.log(eventsource)
   
    return <div  className='mx-auto' id={id}><form  onSubmit={formik.handleSubmit}>
 <h1 className='text-center'>create propoasal</h1>

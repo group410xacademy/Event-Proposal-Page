@@ -10,7 +10,7 @@ mongoose.connect(process.env.CONNECTION_STRING,{useNewUrlParser:true,useUnifiedT
 userDB=mongoose.model('user',userSchema)
 vendorDB=mongoose.model('vendor',vendorSchema)
 proposalDB=mongoose.model('proposal',proposalSchema)
-proposalimagesDB=mongoose.model('proposalimage',proposalimagesSchema)
+proposalimagesDB=mongoose.model('proposalimagesDB',proposalimagesSchema)
 
 
 exports.userDB=userDB
