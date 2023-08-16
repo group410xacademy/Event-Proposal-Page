@@ -3,7 +3,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { grey } from "@mui/material/colors";
 import { proposalContext } from "../pages/VendorProfile";
-import { useContext } from "react";
+import { useContext,useState} from "react";
+import axios from "axios";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import {Button} from '@mui/material';
 // UUID
 // let eventName="suraj marriage"
 // let eventPlace="rajahmundry"
@@ -17,8 +24,58 @@ import { useContext } from "react";
 // events  
 
 export default function EventCard(eventdata){
-    const {proposaldata,find,setFormikdata,onOpen}=useContext(proposalContext)
+    const {proposaldata,find,setFormikdata,onOpen,setRefresh,setMethod}=useContext(proposalContext)
+    const [open1, setOpen1] = useState(false);
+
+    const handleClickOpen1 = () => {
+      setOpen1(true);
+    };
+  
+    const handleClose1 = () => {
+      setOpen1(false);
+    };
+  
 return (<div className="d-flex flex-column border border-dark mx-2 mb-2">
+    <div>
+      <Dialog
+        open={open1}
+        onClose={handleClose1}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+         Delete The Proposal?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           record will be deleted permanently
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose1}>Disagree</Button>
+          <Button onClick={
+            
+            async ()=>{
+                console.log(eventdata._id,'this is the id')
+                try{
+                    const datauploading =await axios.delete(`http://localhost:5000/proposal/deleteproposal/${eventdata._id}`,{headers:{
+                        Authorization:localStorage.getItem("ACCESS_TOKEN")
+                      }}) 
+                      console.log(datauploading)
+                      setRefresh((prev)=>!prev)
+                      handleClose1()
+                }
+                 catch(err){
+                    console.log(err,'error')
+                    handleClose1()
+                 }
+            }
+            } autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
     <div className="d-flex flex-column px-3">
  
 <h5>{eventdata.eventName}</h5>
@@ -36,11 +93,15 @@ return (<div className="d-flex flex-column border border-dark mx-2 mb-2">
         <span onClick={(prop)=>{
           console.log(eventdata,'ok')
         setFormikdata(eventdata)
+        setMethod("PUT")
             onOpen()
         }}>
   <EditIcon  className="px-1" sx={{color:"grey"}}/>
   </span>
-  <span>
+  <span onClick={async()=>{
+    handleClickOpen1()
+      
+  }}>
 <DeleteIcon  className="px-1" sx={{color:"grey"}}/>
 </span>
     </div>

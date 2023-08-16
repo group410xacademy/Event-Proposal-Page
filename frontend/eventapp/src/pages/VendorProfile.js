@@ -13,6 +13,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { useContext,createContext } from "react";
 import { blue } from "@mui/material/colors";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // axios.defaults.headers.common
 const style = {
     position: 'absolute',
@@ -44,12 +45,16 @@ export default function VendorProfile(){
     const [proposaldata,setproposaldata]=useState([])
     const [refresh,setRefresh]=useState(false)
     const [formikdata,setFormikdata]=useState({})
+    const [method,setMethod]=useState("POST")
+    const [isloggedin,setLoggedin] =useState(false)
+    const navigat = useNavigate()
     useEffect(()=>{
 async function getData(){
   try{const {data} =await axios.get("http://localhost:5000/proposal/getproposals",{headers:{
     Authorization:localStorage.getItem("ACCESS_TOKEN")
   }})
   setproposaldata(data)
+  setLoggedin(true)
   console.log(data,'this is data for react')
   for(let i=0;i<data.length;i++){
     console.log(data[i]["_id"])
@@ -57,7 +62,7 @@ async function getData(){
   console.log(find(data,"64da99a67560463a6fe3e101" ))
 }
 catch(err){
-  console.log('error in getting data from server',err)
+ navigat('/')
 }
 
 }
@@ -66,8 +71,8 @@ getData()
     console.log(formikdata,'my data is')
   
   console.log(formikdata,'formakdata is chanhed or not')
-    return (<>
-    <proposalContext.Provider value={{proposaldata:proposaldata,find:find,setFormikdata:setFormikdata,onOpen:handleOpen}}>
+    return (<>{
+    isloggedin&&<proposalContext.Provider value={{proposaldata:proposaldata,find:find,setFormikdata:setFormikdata,onOpen:handleOpen,method:method,setMethod:setMethod,setRefresh:setRefresh}}>
      <div className="w-100">
           <nav className="w-100 border d-flex justify-content-between">
         <div>
@@ -89,7 +94,7 @@ getData()
         
         <TextField placeholder="Search projects" className="flex-fill" variant="standard"/>
         <FilterAltIcon/>
-        <Button variant="contained"size="small" onClick={handleOpen}>Create</Button>
+        <Button variant="contained"size="small" onClick={()=>{handleOpen();setMethod("POST")}}>Create</Button>
         </div>
         {
           proposaldata.map(data=> <EventCard {...data} onOpen={handleOpen}/>)
@@ -108,7 +113,7 @@ getData()
         </Modal>
         </div>
       </div>
-      </proposalContext.Provider>
+      </proposalContext.Provider>}
       </>
     );
 }

@@ -10,6 +10,10 @@ const proposalSchema =new Schema({
     to:Schema.Types.Date,
     description:Schema.Types.String,
     foodPreferences:Schema.Types.String,
-    events:Schema.Types.String
+    events:Schema.Types.String,
+    AUTHOR:{
+        type:Schema.Types.ObjectId,
+        ref:"vendor"
+    }
 })
 exports.proposalSchema =proposalSchema;

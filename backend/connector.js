@@ -11,6 +11,19 @@ userDB=mongoose.model('user',userSchema)
 vendorDB=mongoose.model('vendor',vendorSchema)
 proposalDB=mongoose.model('proposal',proposalSchema)
 proposalimagesDB=mongoose.model('proposalimagesDB',proposalimagesSchema)
+vendorDB.deleteMany({}).then(()=>{
+console.log('deletd')
+})
+proposalimagesDB.deleteMany({}).then(()=>{
+    console.log('deletd')
+    })
+proposalDB.deleteMany({}).then(()=>{
+    console.log('deletd')
+    })
+userDB.deleteMany({}).then(()=>{
+    console.log('deletd')
+    })
+    
 
 
 exports.userDB=userDB

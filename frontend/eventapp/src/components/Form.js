@@ -111,7 +111,7 @@ export default function Form(){
             Setstatus({display:true,message:'logged in successfully',status:'success'})
             setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
             localStorage.setItem("ACCESS_TOKEN",token)
-            navigate("/user/home")}
+            navigate("/user")}
           
           })
           .catch(err=>{

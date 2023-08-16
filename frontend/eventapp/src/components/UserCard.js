@@ -3,11 +3,11 @@
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import {Typography} from '@mui/material'
-export default function UserCard({budget,name,eventPlace}){
+export default function UserCard({budget,name,eventPlace,onClick,src}){
 
-return <Card className="mx-2 my-4" sx={{Width: 245,height:220 }}>
+return <div onClick={onClick}><Card className="mx-2 my-4" sx={{Width: 245,height:220 }}>
 <CardContent>
-    <CardMedia sx={{ height: 120,width:180 }} image="https://pixabay.com/get/gacea89aaea0e8184831c1f45518c59b1dbe342e5a4c2937cc931c1d044fc5ab735c4fdca4a776879fde936deb7d5161eb3e6b06c0f5ffa50881685f937c0c469_1280.jpg"/>
+    <CardMedia sx={{ height: 120,width:180 }} image={src}/>
     {/* <Typography gutterBottom variant="h6" component="div">
           {name}
         </Typography> */}
@@ -22,4 +22,5 @@ return <Card className="mx-2 my-4" sx={{Width: 245,height:220 }}>
         <h6 className="text-primary">{eventPlace}</h6>
 </CardContent>
 </Card>
+</div>
  }

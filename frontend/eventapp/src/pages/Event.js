@@ -3,6 +3,7 @@ import UserCard from "../components/UserCard"
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import UserBigCard from "../components/UserBigCard";
+import { useOutletContext } from "react-router-dom";
 const itemData = [
     {
       img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
@@ -17,8 +18,7 @@ const itemData = [
       title: 'Camera',
     },
     {
-      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-      title: 'Coffee',
+      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c'
     },
     {
       img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
@@ -29,11 +29,12 @@ const itemData = [
       title: 'Honey',
     }
   ];
-export default function Event({description,events,foodPreferences}){
+export default function Event(){
+  const {selected:{PROPOSALS:{budget,eventName,eventPlace,description,from,to,eventType,foodPreferences,events,proposalType},images,AUTHOR:{name,email,phone}}} =useOutletContext()
 return <>
  <div className="d-flex justify-content-between mt-4 mb-4 align-items-center">
          <div className="pe-2">
-           Proposals
+           Proposals&lt; &nbsp;<span className="text-primary h4" >{name}</span>
          </div>
     
          <Button variant="outlined" size="small" >Select</Button>
@@ -41,16 +42,16 @@ return <>
          <div className="row">
             <div className="col-3 mx-2 border" style={{fontSize:"x-small",lineHeight:"130%"}}>
                 <div className="">
-       <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62" className="img-fluid"></img>
+       <img style={{width:"100%",height:"auto"}} src={images[0].url} className="img-fluid"></img>
             </div>
             <div className="px-2" style={{backgroundColor:"grey"}}>ID:001</div>
            <div className="d-flex px-2">
             <div className="">name</div>
-            <div className="mx-3" style={{fontWeight:"bold"}}>saleem</div>
+            <div className="mx-3" style={{fontWeight:"bold"}}>{name}</div>
            </div>
            <div className="d-flex px-2">
             <div>email</div>
-            <div className="mx-3"  style={{fontWeight:"bold"}}>md.saleem@gmail.com</div>
+            <div className="mx-3"  style={{fontWeight:"bold"}}>{email}</div>
            </div>
            <div className="d-flex">
            <div className="d-flex px-2">
@@ -58,7 +59,7 @@ return <>
                 startDate
             </div>
             <div  style={{fontWeight:"bold"}}>
-                26dec1
+                {from}
             </div>
            </div>
 
@@ -67,18 +68,18 @@ return <>
                 endDate
             </div>
             <div  style={{fontWeight:"bold"}}>
-                27dec1
+                {to}
             </div>
            </div>
            </div>
            <div className="d-flex px-2">
             <div>
                 <div>EventType</div>
-                <div className="border text-primary" style={{backgroundColor:"skyblue"}}>Marriage</div>
+                <div className="border text-primary" style={{backgroundColor:"skyblue"}}>{eventType}</div>
             </div>
             <div className="mx-4">
             <div >EventClass</div>
-                <div  style={{fontWeight:"bold"}}>Class A</div>
+                <div  style={{fontWeight:"bold"}}>{proposalType}</div>
 
             </div>
 
@@ -100,18 +101,24 @@ return <>
          <div className="row px-2">
             <div className="col-3 d-flex flex-column">
             <p>MyAlbums</p>
-            <ImageList sx={{ width: 290, height: 200 }} cols={3} rowHeight={50}>
-      {itemData.map((item) => (
-        <ImageListItem key={item.img}>
+            <div  className="w-100 d-flex flex-wrap justify-content-between" style={{margin: "5px",
+        border: "1px",
+        width: "180px"}}>
+      {images.map((item) => (
+     
           <img
-            src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-            srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            alt={item.title}
+          className="ms-1"
+      style={{width:"30%",height:"auto",aspectRatio:"1.2"}}
+          
+            src={`${item.url}?w=164&h=164&fit=crop&auto=format`}
+            srcSet={`${item.url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+            alt={item.id}
             loading="lazy"
           />
-        </ImageListItem>
+   
       ))}
-    </ImageList>
+         </div>
+ 
             </div>
             <div className="col-9 row">
             <div className="col-6">

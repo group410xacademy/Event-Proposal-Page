@@ -27,6 +27,7 @@ var upload =multer({
 const ProposalRoute= express.Router()
 
 const {proposalDB,proposalimagesDB}=require('../connector')
+const { json } = require('body-parser')
 ProposalRoute.get('/viewimages',(req,res)=>{
     res.sendFile('../')
 })
@@ -39,6 +40,15 @@ ProposalRoute.get('/getimages',async (req,res)=>{
     }
 
 })
+ProposalRoute.get('/geteventdetails',async (req,res)=>{
+    try{
+      let data = await proposalimagesDB.findOne({}).populate("AUTHOR").then(p=>console.log(p))
+      res.status(200).send(data)
+    }
+    catch(err){
+res.status(401).send(err)
+    }
+})
 ProposalRoute.post('/uploadimages',upload.array("eventimages",10),async (req,res,next)=>{
     const reqFiles=[]
     const url=req.protocol+'://'+req.get('host')
@@ -49,6 +59,8 @@ ProposalRoute.post('/uploadimages',upload.array("eventimages",10),async (req,res
     const images =new proposalimagesDB({
          UUID:req.UUID,
          images:reqFiles,
+         AUTHOR:req.UUID,
+         PROPOSALS:req.query._id
     })
 try{
   
@@ -63,6 +75,78 @@ try{
 catch(err){
     res.status(401).send(err)
 }
+})
+ProposalRoute.post('/updateimages',upload.array("eventimages",10),async (req,res)=>{
+    let filters=req.query
+    const reqFiles=[]
+    let url=req.protocol+'://'+req.get('host')
+    let length =Object.keys(filters).length
+try{
+
+        for ( const key in filters){
+           let i=0
+           console.log('key is '+key)
+           let query="images.$."+key
+           query=query.toString()
+           url=url+'/public/'+req.files[i].filename
+           let id=req.files[i].filename
+        
+        // console.log(typeof(req.files[i].filename),req.files[i].filename)
+        // reqFiles.push({url:url+'/public/'+req.files[i].filename,id:req.files[i].filename})
+     
+            let dta= await proposalimagesDB.findOneAndUpdate({UUID:req.UUID},{
+                '$set':{
+                [query]:{url:url,id:id}}
+                }
+            )
+        
+          
+            i++;
+            if(i==length){
+                return res.status(200).send('success')
+            }
+          
+        }}
+        catch(err){
+            console.log(err)
+            res.status(500).send(filters)
+        }
+      
+       
+    }
+   
+         
+    
+
+)
+ProposalRoute.put('/updateimages2',upload.array("eventimages",10),async(req,res)=>{
+    const reqFiles=[]
+    const url=req.protocol+'://'+req.get('host')
+    for(var i=0;i<req.files.length;i++){
+        console.log(typeof(req.files[i].filename),req.files[i].filename)
+        reqFiles.push({url:url+'/public/'+req.files[i].filename,id:req.files[i].filename})
+    }
+    // const images =new proposalimagesDB({
+    //      UUID:req.UUID,
+    //      images:reqFiles,
+    // })
+   
+try{
+    const updating = await proposalimagesDB.findOneAndUpdate({UUID:req.UUID},{
+        $push:{images:{}}
+        
+    })
+    res.status(200).send(updating)
+  }
+//   else{
+//     res.status(200).send({message:'upload successful',data:uploadingimages,body:req.body})
+//   }  
+
+catch(err){
+    res.status(401).send(err)
+}
+
+    
 })
 ProposalRoute.get('/getproposals',async (req,res)=>{
     try{
@@ -86,7 +170,8 @@ const newproposal =new proposalDB({
     to:req.body.to,
     description:req.body.description,
     foodPreferences:req.body.foodPreferences,
-    events:req.body.events  
+    events:req.body.events,
+    AUTHOR:req.UUID
 })
 try{
     const uploading =await newproposal.save()
@@ -98,20 +183,44 @@ catch(e){
 }
 
 })
-ProposalRoute.put('/updateProposal',async (req,res)=>{
+ProposalRoute.delete('/deleteproposal/:id',async(req,res)=>{
+try{
+const deleting  = await proposalDB.findOneAndDelete({_id:req.params.id,UUID:req.UUID})
+if(!deleting){
+    res.status(401).send({error:"proposal not found"})
+}
+else{
+    res.status(200).send("deleted successfully")
+}
+}
+catch(err){
+res.status(500).send({error:"internal server error"})
+}
+
+})
+ProposalRoute.put('/updateproposal',async (req,res)=>{
     let updatedmessage =req.body
-    const filter = {_id:req.body.id,uuid:req.UUID}
+    const filter = {_id:req.query._id,UUID:req.UUID}
     try{
-    const updating = await proposalDB.findOneAndUpdate(filter,updatedmessage)
+    const updating = await proposalDB.findOneAndUpdate(filter,{eventName:req.body.eventName,
+        eventPlace:req.body.eventPlace,
+        proposalType:req.body.proposalType,
+        eventType:req.body.eventType,
+        budget:req.body.budget,
+        from:req.body.from,
+        to:req.body.to,
+        description:req.body.description,
+        foodPreferences:req.body.foodPreferences,
+        events:req.body.events})
     if(!updating){
-        res.status(401).send({error:'record not found to update'})
+        res.status(401).send(updating)
     }
     else{
-        res.status(200).send({message:updatedmessage})
+        res.status(200).send('updated successfully')
     }
     }
     catch(err){
-        res.status(404).send({error:'error fetching the data'})
+        res.status(404).send({error:err})
     }
 })
 module.exports=ProposalRoute
