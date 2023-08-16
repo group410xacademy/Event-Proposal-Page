@@ -11,7 +11,8 @@ if(confirmation!==null){
 const result = await bcrypt.compare(req.body.loginpassword,confirmation.password)
 
 if(result){
-    let token = jwt.sign({...confirmation,exp:Math.floor(Date.now()/1000)+(60*60)},process.env.TOKEN_SECRET)
+  let token = jwt.sign({_id:confirmation._id,name:confirmation.name,exp:Math.floor(Date.now()/1000)+(60*60)},process.env.TOKEN_SECRET)
+
     res.status(200).send(token)
 }
 else{
@@ -34,7 +35,8 @@ personRoute.post('/registeruser',async(req,res)=>{
         name:req.body.name,
         email:req.body.email,
         phone:req.body.phone,
-        password:hash
+        password:hash,
+        role:'user'
       })
         const upload =await newuser.save()
         res.status(200).send(upload)
@@ -50,14 +52,16 @@ personRoute.post('/loginvendor',async (req,res)=>{
  const result = await bcrypt.compare(req.body.loginpassword,confirmation.password)
  
  if(result){
-     let token = jwt.sign({...confirmation,exp:Math.floor(Date.now()/1000)+(60*60)},process.env.TOKEN_SECRET)
+  let parceldata = confirmation
+  confirmation.exp=Math.floor(Date.now()/1000)+(60*60)
+     let token = jwt.sign({_id:confirmation._id,name:confirmation.name,exp:Math.floor(Date.now()/1000)+(60*60)},process.env.TOKEN_SECRET)
      res.status(200).send(token)
  }
  else{
-   res.status(200).send({error:'password didnt match'}) 
+   res.status(401).send({error:'password didnt match'}) 
  }}
  else{
-   res.status(200).send({error:'register to login'})
+   res.status(401).send({error:'register to login'})
  }
  
  
@@ -73,13 +77,18 @@ personRoute.post('/registervendor',async(req,res)=>{
       name:req.body.name,
       email:req.body.email,
       phone:req.body.phone,
-      password:hash
+      password:hash,
+      role:'vendor',
+      PROPOSALS:[],
+      IMAGES:[],
+  
     })
       const upload =await newuser.save()
       res.status(200).send(upload)
   }
    catch(err){
-      res.status(404).send({error:'error while uploading to data base'})
+    console.log(err)
+      res.status(500).send({error:err})
   }
 })
 personRoute.post('/validate',async (req,res)=>{

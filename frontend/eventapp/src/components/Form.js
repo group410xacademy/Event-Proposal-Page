@@ -1,4 +1,6 @@
 import {TextField} from '@mui/material';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import {FormControl,FormHelperText,InputLabel,OutlinedInput,FormLabel,Button} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormControl } from '@mui/material/FormControl';
@@ -7,13 +9,16 @@ import { useFormik } from 'formik';
 import * as Yup from "yup";
 import "yup-phone-lite";
 import axios from "axios"
+import { Navigate, useNavigate } from 'react-router-dom';
+import zIndex from '@mui/material/styles/zIndex';
 
 export default function Form(){
     let [show,setShow]=useState('vendor')
     let [method,setMethod]=useState('register')
     let [loadinga,setLoadinga]=useState(false)
     let [loadingb,setLoadingb]=useState(false)
-    console.log('refreshes')
+    const[status,Setstatus]=useState({message:'',status:"success",display:false})
+    let navigate = useNavigate()
     const validation = (method=="register")?(Yup.object().shape({
    email: Yup.string().required().email().test(
         'email-backend-validation',  // Name
@@ -82,46 +87,103 @@ export default function Form(){
         onSubmit: (values,{resetForm}) => {
           if(show=='user'){
           if(method=='register'){
+            values.role="user"
           setLoadingb(true)
           axios.post('http://localhost:5000/person/registeruser',values).then(()=>{
             setTimeout(()=>setLoadingb(false),5000)
+            Setstatus({display:true,message:'registered successfully',status:'success'})
+            setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
             resetForm({values:''})
-          console.log('submitted')})
+          console.log('submitted')}).catch((err)=>{
+            let message = err.response.data.error
+            Setstatus({display:true,message:err.response.data.error,status:'error'})
+            setLoadingb(false)
+            setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
+          })
           }
           else if(method=='login'){
             console.log('clicked')
             setLoadinga(true)
-            axios.post('http://localhost:5000/person/loginuser',values).then(()=>{
+            axios.post('http://localhost:5000/person/loginuser',values).then(({status,data:token})=>{
               setTimeout(()=>setLoadinga(false),2000)
-            console.log('loggedin')})
+              if(status=="200"){
+            console.log('loggedin')
+            Setstatus({display:true,message:'logged in successfully',status:'success'})
+            setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
+            localStorage.setItem("ACCESS_TOKEN",token)
+            navigate("/user")}
+          
+          })
+          .catch(err=>{
+            let message = err.response.data.error
+            Setstatus({display:true,message:err.response.data.error,status:'error'})
+            setLoadinga(false)
+            setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
+          })
           }
         }
         else if(show=='vendor'){
           if(method=='register'){
+            values.role="vendor"
           setLoadingb(true)
           axios.post('http://localhost:5000/person/registervendor',values).then(()=>{
             setTimeout(()=>setLoadingb(false),5000)
+            Setstatus({display:true,message:'registered successfully',status:'success'})
+            setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
             resetForm({values:''})
-          console.log('submitted')})
+          console.log('submitted')}).catch(err=>{
+            let message = err.response.data.error
+            Setstatus({display:true,message:err.response.data.error,status:'error'})
+            setLoadingb(false)
+            
+            setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
+          })
           }
           else if(method=='login'){
             console.log('clicked')
             setLoadinga(true)
-            axios.post('http://localhost:5000/person/loginvendor',values).then(()=>{
+            axios.post('http://localhost:5000/person/loginvendor',values).then(({status,data:token})=>{
               setTimeout(()=>setLoadinga(false),2000)
-            console.log('loggedin')})
+            console.log('loggedin',token)
+            if(status==200){
+              Setstatus({display:true,message:'logged in successfully',status:'success'})
+              setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
+            localStorage.setItem("ACCESS_TOKEN",token)
+            navigate("/vendor")}
+          }).catch(err=>{
+
+            let message = err.response.data.error
+            Setstatus({display:true,message:err.response.data.error,status:'error'})
+            setLoadinga(false)
+            setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
+          })
           }
         }
         },
       }); 
-    return<>
+    return<div style={{position:"relative"}}>
+      {status.display&&<div className='d-flex'>    <Alert sx={{zIndex:"10",width:"100%",position:"absolute"}} severity={(status.status=='error')?"error":"success"}>
+        <AlertTitle sx={{}}>{status.status}</AlertTitle>
+        {status.message}
+      </Alert>
+      </div>}
+      {/* <div className='d-flex'>    <Alert sx={{zIndex:"10",width:"100%",position:"absolute"}} severity="success">
+        <AlertTitle sx={{}}>Error</AlertTitle>
+        error while submiting — <strong>Try again!</strong>
+      </Alert>
+      </div> */}
+   
     <div className='d-flex justify-content-between w-100'>
+      
+
       <Button className='w-50 rounded-0' variant={(show=='vendor')?'contained':'text'} onClick={()=>setShow('vendor')}>Vendor</Button>
       <Button className='w-50 rounded-0' variant={(show=='user')?'contained':'text'} onClick={()=>setShow('user')}>User</Button>
     </div>
     <div>
     <h6 className='signintext'>{method==='login'?'signin your account':'register your account'}</h6>
     </div>
+  
+
     <form  onSubmit={formik.handleSubmit} className='mx-3'>
         <div className='d-flex flex-column'>
          {(method=='register')&&<><FormControl color="primary" >
@@ -172,5 +234,5 @@ else return 1}}} onClick={()=>{setMethod('register')
 
     </form>
     
-    </>
+    </div>
 }

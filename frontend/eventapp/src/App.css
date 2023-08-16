@@ -6,4 +6,30 @@
   margin-top: 15px;
   margin-bottom: 17px;
 }
+.width-image{
+  width: 100%;
+ 
+  color:white;
+}
+.width-image-20{
+  background-color: white;
+  margin-bottom: 5px;
+  width: 15%;
+  height: 15%
 
+}
+.imagelist{
+  /* max-height:100%; 
+  max-width:100%; */
+  
+    float: left;
+    width:  40px;
+    height: 40px;
+    object-fit: cover;
+}
+.border{
+  border: 2px dotted gray;
+}
+.align-button-right{
+  justify-content: right !important;
+}
