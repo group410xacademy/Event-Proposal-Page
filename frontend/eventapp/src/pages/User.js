@@ -10,7 +10,7 @@ export default function User(){
     useEffect(()=>{
         console.log('component -mounted')
         async function getData(){
-
+try{
     let  {data} = await axios.get("http://localhost:5000/user/allproposal",{headers:{
     Authorization:localStorage.getItem("ACCESS_TOKEN")
    
@@ -18,7 +18,10 @@ export default function User(){
   setUserdata(data)
   setLoggedin(true)
   console.log(userdata.images)
-  navigation('/user/home')
+  navigation('/user/home')}
+  catch(err){
+    navigation('/')
+  }
 }
 getData()
 },[])

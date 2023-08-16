@@ -25,11 +25,12 @@ function App() {
  <CreatePropsal/> */}
  <BrowserRouter>
  <Routes>
-  <Route path="/" element={<Home/>}/>
-  <Route path='/vendor' element={<VendorProfile/>}/>
-  <Route path='/user' element={<User/>}>
+  <Route path="/" element={<Home/>}>
+  <Route path='vendor' element={<VendorProfile/>}/>
+  <Route path='user' element={<User/>}>
   <Route path='home' element={<UserHome/>} />
 <Route path='event' element={<Event/>} />
+  </Route>
   </Route>
  </Routes>
  </BrowserRouter>

@@ -12,7 +12,7 @@ import axios from "axios"
 import { Navigate, useNavigate } from 'react-router-dom';
 import zIndex from '@mui/material/styles/zIndex';
 
-export default function Form(){
+export default function Form({setSessiondata}){
     let [show,setShow]=useState('vendor')
     let [method,setMethod]=useState('register')
     let [loadinga,setLoadinga]=useState(false)
@@ -111,6 +111,7 @@ export default function Form(){
             Setstatus({display:true,message:'logged in successfully',status:'success'})
             setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
             localStorage.setItem("ACCESS_TOKEN",token)
+            setSessiondata({status:true,data:{},role:'user'})
             navigate("/user")}
           
           })
@@ -150,6 +151,7 @@ export default function Form(){
               setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
             localStorage.setItem("ACCESS_TOKEN",token)
             navigate("/vendor")}
+            setSessiondata({status:true,data:{},role:'vendor'})
           }).catch(err=>{
 
             let message = err.response.data.error

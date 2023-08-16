@@ -7,11 +7,13 @@ const vendorSchema =new Schema({
     role:Schema.Types.String,
     PROPOSALS:[{
         type:Schema.Types.ObjectId,
-        ref:"proposal"
+        ref:"proposal",
+        default:null
     }],
     IMAGES:[{
         type:Schema.Types.ObjectId,
-        ref:"proposalimagesDB"
+        ref:"proposalimagesDB",
+        default:null
     }]
 })
 exports.vendorSchema =vendorSchema;
