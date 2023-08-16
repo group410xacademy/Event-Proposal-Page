@@ -111,8 +111,10 @@ export default function Form({setSessiondata}){
             Setstatus({display:true,message:'logged in successfully',status:'success'})
             setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
             localStorage.setItem("ACCESS_TOKEN",token)
-            setSessiondata({status:true,data:{},role:'user'})
-            navigate("/user")}
+          
+            localStorage.setItem("sessiondata",JSON.stringify({status:true,data:{},role:'user'}))
+            navigate("/user/home")
+            setSessiondata({status:true,data:{},role:'user'})}
           
           })
           .catch(err=>{
@@ -150,8 +152,10 @@ export default function Form({setSessiondata}){
               Setstatus({display:true,message:'logged in successfully',status:'success'})
               setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
             localStorage.setItem("ACCESS_TOKEN",token)
+            localStorage.setItem("sessiondata",JSON.stringify({status:true,data:{},role:'vendor'}))
             navigate("/vendor")}
             setSessiondata({status:true,data:{},role:'vendor'})
+     
           }).catch(err=>{
 
             let message = err.response.data.error

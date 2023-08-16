@@ -6,9 +6,9 @@ import { useState } from "react";
 export default function UserHome (){
     const {username,userdata,navigation,selected,setSelected}= useOutletContext()
     console.log(username)
-   let data= userdata.images.map((element) => {
+   let data= userdata.length==0||userdata.images.map((element) => {
         console.log(element,'element is')
-        return element.images.map(data=><UserCard onClick={()=>{setSelected(element);console.log(element);navigation("/user/event")}} src={data.url} budget={element.PROPOSALS.budget||''} eventPlace={element.PROPOSALS.eventPlace||''} name="saleem"/>)
+        return element.images.map(data=><UserCard onClick={()=>{setSelected(element);console.log(element);navigation("/user/event")}} src={data.url} budget={element.PROPOSALS?element.PROPOSALS.budget:''} eventPlace={element.PROPOSALS?element.PROPOSALS.eventPlace:''} name="saleem"/>)
         });
         console.log(data,'data is')
     return <>

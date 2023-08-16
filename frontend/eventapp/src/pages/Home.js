@@ -2,10 +2,29 @@ import { useState } from "react"
 import Form from "../components/Form"
 import './Home.css'
 import { Outlet } from "react-router-dom"
-export default function Home(){
-  const [sessiondata,setSessiondata]=useState({status:false,data:{},role:""})
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
 
-    return <>{sessiondata.status&&<div className="partyimage container"><div>logo</div>
+export default function Home(){
+  console.log(JSON.parse(localStorage.getItem("sessiondata")),'local storage')
+  const [sessiondata,setSessiondata]=useState(JSON.parse(localStorage.getItem("sessiondata"))||{status:false,data:{},role:''})
+console.log('home is mounted')
+const Logout=()=>{
+  localStorage.removeItem("sessiondata")
+  setSessiondata({status:false,data:{},role:''})
+}
+const [anchorEl, setAnchorEl] = useState(null);
+const open = Boolean(anchorEl);
+const handleClick = (event) => {
+  setAnchorEl(event.currentTarget);
+};
+const handleClose = () => {
+  setAnchorEl(null);
+};
+    return <>{sessiondata.status||<div className="partyimage container"><div>logo</div>
     <img  className="partyimage" src="background.png"/>
     <div className="d-flex flex-row justify-content-between px-5">
     
@@ -18,6 +37,39 @@ export default function Home(){
     </div>
 
     </div>}
-    <Outlet value={sessiondata}/>
+    {sessiondata.status&&<>
+      <nav className="w-100 border d-flex justify-content-between">
+        <div>
+            <span style={{color:"blue"}}>LOGO</span>
+        </div>
+        <div className="d-flex flex-row justify-content-around align-items-center">
+        <h6 className="mx-2">username</h6>
+        <div>
+      <IconButton
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+         <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={()=>{handleClose();Logout()}}>Logout</MenuItem>
+      </Menu>
+    </div>
+        </div>
+        </nav>
+    <Outlet context={{sessiondata:sessiondata}}/></>}
     </>
 }
