@@ -27,7 +27,7 @@ export default function Form({setSessiondata}){
           // Res from backend will be flag at res.data.success, true for 
           // username good, false otherwise
           const { data: { status } } = await axios.post(
-            "http://localhost:5000/person/validate", 
+            "https://apple-lv8r.onrender.com/validate", 
             { email:email,show:show}
           );
   
@@ -42,7 +42,7 @@ export default function Form({setSessiondata}){
           // Res from backend will be flag at res.data.success, true for 
           // username good, false otherwise
           const { data: { status } } = await axios.post(
-            "http://localhost:5000/person/validate", 
+            "https://apple-lv8r.onrender.com/validate", 
             { phone:phone,show:show}
           );
   
@@ -62,7 +62,7 @@ export default function Form({setSessiondata}){
              // Res from backend will be flag at res.data.success, true for 
              // username good, false otherwise
              const { data: { status } } = await axios.post(
-               "http://localhost:5000/person/validate", 
+               "https://apple-lv8r.onrender.com/validate", 
                { email:loginid,show:show}
              );
      
@@ -89,7 +89,7 @@ export default function Form({setSessiondata}){
           if(method=='register'){
             values.role="user"
           setLoadingb(true)
-          axios.post('http://localhost:5000/person/registeruser',values).then(()=>{
+          axios.post('https://apple-lv8r.onrender.com/registeruser',values).then(()=>{
             setTimeout(()=>setLoadingb(false),5000)
             Setstatus({display:true,message:'registered successfully',status:'success'})
             setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
@@ -104,7 +104,7 @@ export default function Form({setSessiondata}){
           else if(method=='login'){
             console.log('clicked')
             setLoadinga(true)
-            axios.post('http://localhost:5000/person/loginuser',values).then(({status,data:token})=>{
+            axios.post('https://apple-lv8r.onrender.com/loginuser',values).then(({status,data:{token,name}})=>{
               setTimeout(()=>setLoadinga(false),2000)
               if(status=="200"){
             console.log('loggedin')
@@ -112,9 +112,9 @@ export default function Form({setSessiondata}){
             setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
             localStorage.setItem("ACCESS_TOKEN",token)
           
-            localStorage.setItem("sessiondata",JSON.stringify({status:true,data:{},role:'user'}))
+            localStorage.setItem("sessiondata",JSON.stringify({status:true,data:{loginname:name},role:'user'}))
             navigate("/user/home")
-            setSessiondata({status:true,data:{},role:'user'})}
+            setSessiondata({status:true,data:{loginname:name},role:'user'})}
           
           })
           .catch(err=>{
@@ -129,7 +129,7 @@ export default function Form({setSessiondata}){
           if(method=='register'){
             values.role="vendor"
           setLoadingb(true)
-          axios.post('http://localhost:5000/person/registervendor',values).then(()=>{
+          axios.post('https://apple-lv8r.onrender.com/registervendor',values).then(()=>{
             setTimeout(()=>setLoadingb(false),5000)
             Setstatus({display:true,message:'registered successfully',status:'success'})
             setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
@@ -145,16 +145,16 @@ export default function Form({setSessiondata}){
           else if(method=='login'){
             console.log('clicked')
             setLoadinga(true)
-            axios.post('http://localhost:5000/person/loginvendor',values).then(({status,data:token})=>{
+            axios.post('https://apple-lv8r.onrender.com/loginvendor',values).then(({status,data:{token,name}})=>{
               setTimeout(()=>setLoadinga(false),2000)
             console.log('loggedin',token)
             if(status==200){
               Setstatus({display:true,message:'logged in successfully',status:'success'})
               setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
             localStorage.setItem("ACCESS_TOKEN",token)
-            localStorage.setItem("sessiondata",JSON.stringify({status:true,data:{},role:'vendor'}))
+            localStorage.setItem("sessiondata",JSON.stringify({status:true,data:{loginname:name},role:'vendor'}))
             navigate("/vendor")}
-            setSessiondata({status:true,data:{},role:'vendor'})
+            setSessiondata({status:true,data:{loginname:name},role:'vendor'})
      
           }).catch(err=>{
 

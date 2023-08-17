@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Form from "../components/Form"
 import './Home.css'
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -9,6 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 
 export default function Home(){
+const navigatelogout=useNavigate()
   console.log(JSON.parse(localStorage.getItem("sessiondata")),'local storage')
   const [sessiondata,setSessiondata]=useState(JSON.parse(localStorage.getItem("sessiondata"))||{status:false,data:{},role:''})
 console.log('home is mounted')
@@ -43,7 +44,7 @@ const handleClose = () => {
             <span style={{color:"blue"}}>LOGO</span>
         </div>
         <div className="d-flex flex-row justify-content-around align-items-center">
-        <h6 className="mx-2">username</h6>
+        <h6 className="mx-2">{sessiondata.data.loginname}</h6>
         <div>
       <IconButton
         id="basic-button"
@@ -65,7 +66,7 @@ const handleClose = () => {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={()=>{handleClose();Logout()}}>Logout</MenuItem>
+        <MenuItem onClick={()=>{handleClose();Logout();navigatelogout('/')}}>Logout</MenuItem>
       </Menu>
     </div>
         </div>

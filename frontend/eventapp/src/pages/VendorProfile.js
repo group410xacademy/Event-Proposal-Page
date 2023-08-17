@@ -52,7 +52,7 @@ export default function VendorProfile(){
     console.log(sessiondata,'session')
     useEffect(()=>{
 async function getData(){
-  try{const {data} =await axios.get("http://localhost:5000/proposal/getproposals",{headers:{
+  try{const {data} =await axios.get("https://apple-lv8r.onrender.com/proposal/getproposals",{headers:{
     Authorization:localStorage.getItem("ACCESS_TOKEN")
   }})
   setproposaldata(data)

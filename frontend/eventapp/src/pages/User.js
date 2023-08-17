@@ -19,7 +19,7 @@ export default function User(){
         console.log('component -mounted')
         async function getData(){
 try{
-    let  {data} = await axios.get("http://localhost:5000/user/allproposal",{headers:{
+    let  {data} = await axios.get("https://apple-lv8r.onrender.com/user/allproposal",{headers:{
     Authorization:localStorage.getItem("ACCESS_TOKEN")
    
   }})
