@@ -113,7 +113,6 @@ return <>
             src={`${item.url}?w=164&h=164&fit=crop&auto=format`}
             srcSet={`${item.url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
             alt={item.id}
-            loading="lazy"
           />
    
       ))}
