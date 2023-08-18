@@ -101,7 +101,7 @@ return <>
          <div className="row px-2">
             <div className="col-3 d-flex flex-column">
             <p>MyAlbums</p>
-            <div  className="w-100 d-flex flex-wrap justify-content-between" style={{margin: "5px",
+            <div  className="w-100 d-flex flex-wrap" style={{margin: "5px",
         border: "1px",
         width: "180px"}}>
       {images.map((item) => (
@@ -122,7 +122,7 @@ return <>
             <div className="col-9 row">
             <div className="col-6">
       <h5>Contacts</h5>
-      <p>contacts</p>
+      <p>{phone}</p>
       </div>
       <div className="col-6">
       <h5>Events</h5>

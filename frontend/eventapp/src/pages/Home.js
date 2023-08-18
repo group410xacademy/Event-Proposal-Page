@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Form from "../components/Form"
 import './Home.css'
 import { Outlet, useNavigate } from "react-router-dom"
@@ -15,16 +15,26 @@ const navigatelogout=useNavigate()
 console.log('home is mounted')
 const Logout=()=>{
   localStorage.removeItem("sessiondata")
+  localStorage.removeItem("ACCESS_TOKEN")
   setSessiondata({status:false,data:{},role:''})
 }
 const [anchorEl, setAnchorEl] = useState(null);
 const open = Boolean(anchorEl);
+const navigate =useNavigate()
 const handleClick = (event) => {
   setAnchorEl(event.currentTarget);
 };
 const handleClose = () => {
   setAnchorEl(null);
 };
+useEffect(()=>{
+if(sessiondata.status&&sessiondata.role=='user'){
+navigate('/user/home')
+}
+if(sessiondata.status&&sessiondata.role=='vendor'){
+  navigate('/vendor')
+  }
+},[])
     return <>{sessiondata.status||<div className="partyimage container"><div>logo</div>
     <img  className="partyimage" src="background.png"/>
     <div className="d-flex flex-row justify-content-between px-5">
