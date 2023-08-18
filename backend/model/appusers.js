@@ -1,13 +1,12 @@
-const mongoose= require("mongoose");
-const Appuser=mongoose.model("Appuser",
-new mongoose.Schema({
+const {Schema}= require('mongoose');
+const appuser = new Schema({
     name:String,
     email:String,
     phone:String,
     password:String,
-    roles:[
-        {type:mongoose.Schema.Types.ObjectId,ref:"Role"}
+    images:[
+        {_id:Schema.Types.ObjectId,url:String}
     ]
 })
-)
-module.exports=Appuser
+
+module.exports=appuser

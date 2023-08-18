@@ -110,9 +110,8 @@ return <>
           className="ms-1 mt-1"
       style={{width:"30%",height:"auto",aspectRatio:"1.2"}}
           
-            src={`${item.url}?w=164&h=164&fit=crop&auto=format`}
-            srcSet={`${item.url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            alt={item.id}
+            src={item.url}
+         
           />
    
       ))}
