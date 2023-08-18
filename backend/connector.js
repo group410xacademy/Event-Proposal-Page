@@ -26,12 +26,12 @@ proposalimagesDB=mongoose.model('proposalimagesDB',proposalimagesSchema)
 //     console.log('deletd')
 //     })
     
-let myimages = new proposalimagesDB ({
-    images:[{id:'1',url:'sample.jpg'},{id:2,url:'sample2.jpg'}]
-})
-const a =myimages.save()
+// let myimages = new proposalimagesDB ({
+//     images:[{id:'1',url:'sample.jpg'},{id:2,url:'sample2.jpg'}]
+// })
+// const a =myimages.save()
 
-proposalimagesDB.findOneAndUpdate({_id:"64df8bf4efd133282784a55d"},{"images":[{id:2,url:"szmple3.jpg"},{id:3,url:"szmple4.jpg"}]}).then((b)=>console.log(b,'images'))
+// proposalimagesDB.findOneAndUpdate({_id:"64df8bf4efd133282784a55d"},{"images":[{id:2,url:"szmple3.jpg"},{id:3,url:"szmple4.jpg"}]}).then((b)=>console.log(b,'images'))
 
 
 exports.userDB=userDB

@@ -4,6 +4,8 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import UserBigCard from "../components/UserBigCard";
 import { useOutletContext } from "react-router-dom";
+import Skeleton from '@mui/material/Skeleton';
+
 const itemData = [
     {
       img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
@@ -30,11 +32,58 @@ const itemData = [
     }
   ];
 export default function Event(){
-  const {selected:{PROPOSALS:{budget,eventName,eventPlace,description,from,to,eventType,foodPreferences,events,proposalType},images,AUTHOR:{name,email,phone}}} =useOutletContext()
+  const {loading} =useOutletContext()
+  let data =useOutletContext()
+  const {selected:{PROPOSALS:{budget,eventName,eventPlace,description,from,to,eventType,foodPreferences,events,proposalType},images,AUTHOR:{name,email,phone}}} = !loading?data:{selected:{
+    "_id": "",
+    "UUID": "",
+    "images": [
+        {
+            "id": "",
+            "url": "",
+            "_id": ""
+        },
+        {
+            "id": "",
+            "url": "",
+            "_id": ""
+        }
+    ],
+    "AUTHOR": {
+        "_id": "",
+        "name": "",
+        "email": "",
+        "phone": "",
+        "password": "",
+        "role": "",
+        "PROPOSALS": [],
+        "IMAGES": [],
+        "__v": 0
+    },
+    "PROPOSALS": {
+        "_id": "",
+        "UUID": "",
+        "eventName": "",
+        "eventPlace": "",
+        "proposalType": "",
+        "eventType": "",
+        "budget": 0,
+        "from": "",
+        "to": "",
+        "description": "",
+        "foodPreferences": "",
+        "events": "",
+        "AUTHOR": "",
+        "__v": 0
+    },
+    "__v": 0
+  }
+}
+  
 return <>
  <div className="d-flex justify-content-between mt-4 mb-4 align-items-center">
          <div className="pe-2">
-           Proposals&lt; &nbsp;<span className="text-primary h4" >{name}</span>
+           {loading?<Skeleton/>:<>Proposals&lt; &nbsp;<span className="text-primary h4" >{name}</span></>}
          </div>
     
          <Button variant="outlined" size="small" >Select</Button>
@@ -44,10 +93,11 @@ return <>
                 <div className="">
        <img style={{width:"100%",height:"auto"}} src={images[0].url} className="img-fluid"></img>
             </div>
-            <div className="px-2" style={{backgroundColor:"grey"}}>ID:001</div>
+            {loading?<Skeleton/>:<div className="px-2" style={{backgroundColor:"grey"}}>ID:001</div>}
            <div className="d-flex px-2">
-            <div className="">name</div>
+           {loading?<Skeleton/>:<> <div className="">name</div>
             <div className="mx-3" style={{fontWeight:"bold"}}>{name}</div>
+            </>}
            </div>
            <div className="d-flex px-2">
             <div>email</div>
@@ -56,29 +106,29 @@ return <>
            <div className="d-flex">
            <div className="d-flex px-2">
             <div className="me-2">
-                startDate
+             {loading?<Skeleton/>:<> startDate</>}
             </div>
             <div  style={{fontWeight:"bold"}}>
-                {from}
+                {loading?<Skeleton/>:from}
             </div>
            </div>
 
            <div className="d-flex px-1">
-            <div className="me-2">
-                endDate
+           <div className="me-2">
+                {loading?<Skeleton/>:<>endDate</>}
             </div>
             <div  style={{fontWeight:"bold"}}>
-                {to}
+                {loading?<Skeleton/>:to}
             </div>
            </div>
            </div>
            <div className="d-flex px-2">
             <div>
-                <div>EventType</div>
-                <div className="border text-primary" style={{backgroundColor:"skyblue"}}>{eventType}</div>
+              {loading?<Skeleton/>:<div>EventType</div>}
+                <div className="border text-primary" style={{backgroundColor:"skyblue"}}>{loading?<Skeleton/>:eventType}</div>
             </div>
             <div className="mx-4">
-            <div >EventClass</div>
+            <div >{loading?<Skeleton/>:<>EventClass</>}</div>
                 <div  style={{fontWeight:"bold"}}>{proposalType}</div>
 
             </div>
@@ -87,12 +137,12 @@ return <>
             </div>
             <div className="col-9 row">
                 <div className="col-6">
-      <h5>Venues and Arrangements</h5>
-      <p>{description}</p>
+      {loading?<Skeleton/>:<h5>Venues and Arrangements</h5>}
+      <p>{loading?<Skeleton/>:description}</p>
       </div>
       <div className="col-6">
-      <h5>Food Preferences</h5>
-      <p>{foodPreferences}</p>
+      <h5>{loading?<Skeleton/>:<>Food Preferences</>}</h5>
+      <p>{loading?<Skeleton/>:foodPreferences}</p>
       </div>
       
             </div>
@@ -106,7 +156,7 @@ return <>
         width: "180px"}}>
       {images.map((item) => (
      
-          <img
+          loading?<Skeleton/>:<img
           className="ms-1 mt-1"
       style={{width:"30%",height:"auto",aspectRatio:"1.2"}}
           

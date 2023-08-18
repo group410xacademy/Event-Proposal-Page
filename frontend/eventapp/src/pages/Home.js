@@ -35,14 +35,14 @@ if(sessiondata.status&&sessiondata.role=='vendor'){
   navigate('/vendor')
   }
 },[])
-    return <>{sessiondata.status||<div className="partyimage container"><div>logo</div>
+    return <>{sessiondata.status||<div className="partyimage container"><div style={{color:"white"}}><p className="h5 ps-1 pt-1">LOGO</p></div>
     <img  className="partyimage" src="background.png"/>
-    <div className="d-flex flex-row justify-content-between px-5">
+    <div style={{height:"400px"}} className="d-flex flex-row justify-content-between px-5">
     
-      <div>
-        text will be displayed here
+      <div style={{color:"white"}} className="my-auto">
+        <p className="h1">TEXT WILL<br/>BE DISPLAYED<br/>HERE</p>
       </div>
-      <div className='bg-white'>
+      <div className='bg-white' style={{height:"fit-content"}}>
        <Form setSessiondata={setSessiondata}/>
       </div>
     </div>
