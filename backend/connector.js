@@ -12,19 +12,24 @@ userDB=mongoose.model('user',userSchema)
 vendorDB=mongoose.model('vendor',vendorSchema)
 proposalDB=mongoose.model('proposal',proposalSchema)
 proposalimagesDB=mongoose.model('proposalimagesDB',proposalimagesSchema)
+// proposalimagesDB.findOneAndUpdate({"AUTHOR":{_id:"64e070c27ab483bb1b963053"}},{images:[{
+//     id:"happy",
+//     url:"https://wallpapercave.com/wp/wp10715834.jpg"
+// },{ id:"sad",
+// url:"https://wallpapercave.com/dwp2x/wp7488226.jpg"}]}).then((dta)=>console.log(dta,'sucess'))
 // userimagesDB =mongoose.model('image',appuser)
-// vendorDB.deleteMany({}).then(()=>{
-// console.log('deletd')
-// })
-// proposalimagesDB.deleteMany({}).then(()=>{
-//     console.log('deletd')
-//     })
-// proposalDB.deleteMany({}).then(()=>{
-//     console.log('deletd')
-//     })
-// userDB.deleteMany({}).then(()=>{
-//     console.log('deletd')
-//     })
+vendorDB.deleteMany({}).then(()=>{
+console.log('deletd')
+})
+proposalimagesDB.deleteMany({}).then(()=>{
+    console.log('deletd')
+    })
+proposalDB.deleteMany({}).then(()=>{
+    console.log('deletd')
+    })
+userDB.deleteMany({}).then(()=>{
+    console.log('deletd')
+    })
     
 // let myimages = new proposalimagesDB ({
 //     images:[{id:'1',url:'sample.jpg'},{id:2,url:'sample2.jpg'}]
