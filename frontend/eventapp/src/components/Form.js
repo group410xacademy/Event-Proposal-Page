@@ -27,7 +27,7 @@ export default function Form({setSessiondata}){
           // Res from backend will be flag at res.data.success, true for 
           // username good, false otherwise
           const { data: { status } } = await axios.post(
-            "https://apple-lv8r.onrender.com/person/validate", 
+            "https://api-event-proposal.onrender.com/person/validate", 
             { email:email,show:show}
           );
   
@@ -42,7 +42,7 @@ export default function Form({setSessiondata}){
           // Res from backend will be flag at res.data.success, true for 
           // username good, false otherwise
           const { data: { status } } = await axios.post(
-            "https://apple-lv8r.onrender.com/person/validate", 
+            "https://api-event-proposal.onrender.com/person/validate", 
             { phone:phone,show:show}
           );
   
@@ -62,7 +62,7 @@ export default function Form({setSessiondata}){
              // Res from backend will be flag at res.data.success, true for 
              // username good, false otherwise
              const { data: { status } } = await axios.post(
-               "https://apple-lv8r.onrender.com/person/validate", 
+               "https://api-event-proposal.onrender.com/person/validate", 
                { email:loginid,show:show}
              );
      
@@ -89,7 +89,7 @@ export default function Form({setSessiondata}){
           if(method=='register'){
             values.role="user"
           setLoadingb(true)
-          axios.post('https://apple-lv8r.onrender.com/person/registeruser',values).then(()=>{
+          axios.post('https://api-event-proposal.onrender.com/person/registeruser',values).then(()=>{
             setTimeout(()=>setLoadingb(false),5000)
             Setstatus({display:true,message:'registered successfully',status:'success'})
             setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
@@ -104,7 +104,7 @@ export default function Form({setSessiondata}){
           else if(method=='login'){
             console.log('clicked')
             setLoadinga(true)
-            axios.post('https://apple-lv8r.onrender.com/person/loginuser',values).then(({status,data:{token,name}})=>{
+            axios.post('https://api-event-proposal.onrender.com/person/loginuser',values).then(({status,data:{token,name}})=>{
               setTimeout(()=>setLoadinga(false),2000)
               if(status=="200"){
             console.log('loggedin')
@@ -129,7 +129,7 @@ export default function Form({setSessiondata}){
           if(method=='register'){
             values.role="vendor"
           setLoadingb(true)
-          axios.post('https://apple-lv8r.onrender.com/person/registervendor',values).then(()=>{
+          axios.post('https://api-event-proposal.onrender.com/person/registervendor',values).then(()=>{
             setTimeout(()=>setLoadingb(false),5000)
             Setstatus({display:true,message:'registered successfully',status:'success'})
             setTimeout(()=> Setstatus({display:false,message:'',status:'success'}),2000)
@@ -145,7 +145,7 @@ export default function Form({setSessiondata}){
           else if(method=='login'){
             console.log('clicked')
             setLoadinga(true)
-            axios.post('https://apple-lv8r.onrender.com/person/loginvendor',values).then(({status,data:{token,name}})=>{
+            axios.post('https://api-event-proposal.onrender.com/person/loginvendor',values).then(({status,data:{token,name}})=>{
               setTimeout(()=>setLoadinga(false),2000)
             console.log('loggedin',token)
             if(status==200){

@@ -50,7 +50,7 @@ export default function CreateProposal({onClose,id,handlerefresh:setRefresh,form
   console.log(method,'the method is ')
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-    console.log(imageList);
+    console.log(imageList,'working on images upload');
     setImages(imageList);}
 //   const formik = useFormik({
 //     initialValues: formikdata,
@@ -110,7 +110,7 @@ export default function CreateProposal({onClose,id,handlerefresh:setRefresh,form
       if(method=="POST"){
 
         try{
-          const {data} =await axios.post('https://apple-lv8r.onrender.com/proposal/createproposal',values,{headers:{
+          const {data} =await axios.post('https://api-event-proposal.onrender.com/proposal/createproposal',values,{headers:{
             Authorization:localStorage.getItem("ACCESS_TOKEN")
           }})
         _id=data._id
@@ -124,7 +124,7 @@ export default function CreateProposal({onClose,id,handlerefresh:setRefresh,form
         console.log(formikdata._id,values,'hi this is saleem tefsffkjhfskfhdskfhjksdhdjkfhakjfdh')
         try{
           console.log('values while submitting is',values)
-          const {data} =await axios.put(`https://apple-lv8r.onrender.com/proposal/updateproposal?_id=${formikdata._id}`,values,{headers:{
+          const {data} =await axios.put(`https://api-event-proposal.onrender.com/proposal/updateproposal?_id=${formikdata._id}`,values,{headers:{
             Authorization:localStorage.getItem("ACCESS_TOKEN")
           }})
           console.log(data,'server data is')
@@ -142,7 +142,7 @@ onClose()
     
      
 try{
-const imagesuploading = await axios.post(`https://apple-lv8r.onrender.com/proposal/uploadimages?_id=${_id}`,formData,{   
+const imagesuploading = await axios.post(`https://api-event-proposal.onrender.com/proposal/uploadimages?_id=${_id}`,formData,{   
   headers: { "Content-Type": "multipart/form-data","Authorization":localStorage.getItem("ACCESS_TOKEN") }})
 }
 catch(err){

@@ -58,7 +58,7 @@ return (<div className="d-flex flex-column border border-dark mx-2 mb-2">
             async ()=>{
                 console.log(eventdata._id,'this is the id')
                 try{
-                    const datauploading =await axios.delete(`https://apple-lv8r.onrender.com/proposal/deleteproposal/${eventdata._id}`,{headers:{
+                    const datauploading =await axios.delete(`https://api-event-proposal.onrender.com/proposal/deleteproposal/${eventdata._id}`,{headers:{
                         Authorization:localStorage.getItem("ACCESS_TOKEN")
                       }}) 
                       console.log(datauploading)
