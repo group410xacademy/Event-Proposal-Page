@@ -13,7 +13,7 @@ const result = await bcrypt.compare(req.body.loginpassword,confirmation.password
 if(result){
   let token = jwt.sign({_id:confirmation._id,name:confirmation.name,exp:Math.floor(Date.now()/1000)+(60*60)},process.env.TOKEN_SECRET)
 
-    res.status(200).send(token)
+  res.status(200).send({token:token,name:confirmation.name})
 }
 else{
   res.status(401).send({error:'password didnt match'}) 
